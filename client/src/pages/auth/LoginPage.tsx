@@ -65,7 +65,7 @@ export const LoginPage: React.FC = () => {
           fullWidth
           size="md"
           leading={<I name="google" size={18} />}
-          onClick={() => { window.location.href = '/api/v1/auth/google'; }}
+          onClick={() => { window.location.href = `${import.meta.env.VITE_API_URL ?? '/api/v1'}/auth/google`; }}
         >
           Continue with Google
         </Button>
