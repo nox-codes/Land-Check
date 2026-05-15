@@ -32,12 +32,14 @@ function statusTone(status: PurchaseStatus): Tone {
 }
 
 const STATUS_LABEL: Record<PurchaseStatus, string> = {
+  PENDING_SELLER: 'Pending Seller',
   INITIATED: 'Initiated',
   DOCS_UPLOADED: 'Docs Uploaded',
   AI_REVIEWED: 'AI Reviewed',
   IN_ESCROW: 'In Escrow',
   COMPLETED: 'Completed',
   CANCELLED: 'Cancelled',
+  DECLINED: 'Declined',
 };
 
 export const EscrowStatusPage: React.FC = () => {
