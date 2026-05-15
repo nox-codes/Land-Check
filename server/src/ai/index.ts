@@ -1,6 +1,7 @@
 import { prisma } from '../lib/prisma';
 import { createClaudeProvider } from './providers/claude';
 import { createGeminiProvider } from './providers/gemini';
+import { createAILandCheckProvider } from './providers/ailandcheck';
 import type { AIProvider } from './types';
 
 export async function getAIProvider(): Promise<AIProvider> {
@@ -17,6 +18,7 @@ export async function getAIProvider(): Promise<AIProvider> {
   switch (provider) {
     case 'claude': return createClaudeProvider(claudeKey);
     case 'gemini': return createGeminiProvider(geminiKey);
+    case 'ailandcheck': return createAILandCheckProvider(claudeKey);
     default: throw new Error(`Unknown AI provider: ${provider}`);
   }
 }
