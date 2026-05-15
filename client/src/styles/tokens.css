@@ -1,0 +1,149 @@
+/* ── LandCheck Design Tokens ─────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* Brand */
+  --lc-primary:       #3DB349;
+  --lc-primary-600:   #2E9A39;
+  --lc-primary-700:   #1E7A28;
+  --lc-primary-50:    #EEF8EF;
+  --lc-navy:          #242440;
+  --lc-navy-800:      #1B1B30;
+  --lc-accent:        #7C4AC9;
+  --lc-accent-tint:   #F3EEFB;
+
+  /* Semantic */
+  --lc-success:       #3DB349;
+  --lc-success-tint:  #EEF8EF;
+  --lc-caution:       #F59E0B;
+  --lc-caution-tint:  #FEF3C7;
+  --lc-danger:        #EF4444;
+  --lc-danger-tint:   #FEE2E2;
+  --lc-info:          #3B82F6;
+  --lc-info-tint:     #EFF6FF;
+
+  /* Neutral */
+  --lc-text:          #111827;
+  --lc-text-secondary:#374151;
+  --lc-text-muted:    #9CA3AF;
+  --lc-bg:            #F5F6FA;
+  --lc-surface:       #FFFFFF;
+  --lc-surface-2:     #F9FAFB;
+  --lc-border:        #E5E7EB;
+  --lc-border-subtle: #F3F4F6;
+
+  /* Shadows */
+  --lc-shadow-sm:     0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --lc-shadow:        0 4px 12px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04);
+  --lc-shadow-lg:     0 12px 32px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.06);
+  --lc-shadow-xl:     0 24px 48px rgba(0,0,0,0.12), 0 8px 24px rgba(0,0,0,0.08);
+
+  /* Motion */
+  --lc-dur:           180ms;
+  --lc-ease:          cubic-bezier(0.4, 0, 0.2, 1);
+  --lc-spring:        cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Radius */
+  --lc-radius:        14px;
+  --lc-radius-sm:     8px;
+  --lc-radius-lg:     20px;
+  --lc-radius-xl:     28px;
+}
+
+/* ── Reset ──────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--lc-text);
+  background: var(--lc-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+}
+
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; display: block; }
+input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+  border: none;
+  outline: none;
+  background: none;
+}
+
+/* ── Utility classes ────────────────────────────────────── */
+.lc-card {
+  background: var(--lc-surface);
+  border-radius: var(--lc-radius);
+  border: 1px solid var(--lc-border-subtle);
+  box-shadow: var(--lc-shadow-sm);
+}
+
+.lc-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ── Animations ─────────────────────────────────────────── */
+@keyframes lc-fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes lc-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes lc-scale-in {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes lc-pulse-ring {
+  0%   { transform: scale(1);   opacity: 0.8; }
+  50%  { transform: scale(1.5); opacity: 0; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes lc-float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+@keyframes lc-bounce {
+  0%, 80%, 100% { transform: scale(0); opacity: 0.4; }
+  40%           { transform: scale(1);   opacity: 1; }
+}
+
+.lc-fade-up   { animation: lc-fade-up   0.4s var(--lc-ease) both; }
+.lc-fade-in   { animation: lc-fade-in   0.3s var(--lc-ease) both; }
+.lc-scale-in  { animation: lc-scale-in  0.2s var(--lc-spring) both; }
+.lc-float     { animation: lc-float     3s ease-in-out infinite; }

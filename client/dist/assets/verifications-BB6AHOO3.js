@@ -1,0 +1,1 @@
+import{a}from"./index-DvJVbqnZ.js";const n=()=>a.get("/verifications").then(i=>i.data.verifications),o=i=>a.get(`/verifications/${i}`).then(t=>t.data.verification),s=i=>a.post("/verifications",i).then(t=>t.data);export{s as c,o as g,n as l};
