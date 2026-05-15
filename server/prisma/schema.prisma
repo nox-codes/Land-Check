@@ -1,0 +1,277 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum VerificationStatus {
+  PENDING
+  VERIFIED
+  CAUTION
+  HIGH_RISK
+}
+
+enum DocumentType {
+  C_OF_O
+  DEED
+  SURVEY_PLAN
+  POWER_OF_ATTORNEY
+}
+
+enum PaymentStatus {
+  PENDING
+  HELD
+  RELEASED
+  BLOCKED
+}
+
+enum TriggeredBy {
+  AI
+  ADMIN
+  WEBHOOK
+  SYSTEM
+}
+
+enum RegistryStatus {
+  PENDING
+  FOUND
+  NOT_FOUND
+}
+
+enum WalletTxType {
+  FUND
+  ESCROW_HOLD
+  ESCROW_RELEASE
+  ADMIN_CREDIT
+  ADMIN_DEBIT
+}
+
+enum PurchaseStatus {
+  PENDING_SELLER
+  DECLINED
+  INITIATED
+  DOCS_UPLOADED
+  AI_REVIEWED
+  IN_ESCROW
+  COMPLETED
+  CANCELLED
+}
+
+enum NotifType {
+  OFFER_RECEIVED
+  OFFER_ACCEPTED
+  OFFER_DECLINED
+  ESCROW_HELD
+  ESCROW_RELEASED
+  MESSAGE_RECEIVED
+}
+
+model User {
+  id                 String             @id @default(uuid())
+  email              String             @unique
+  passwordHash       String?
+  googleId           String?            @unique
+  role               Role               @default(USER)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  verifications      LandVerification[]
+  payments           Payment[]
+  reports            ScamReport[]
+  wallet             Wallet?
+  purchasesAsBuyer   LandPurchase[]     @relation("PurchaseBuyer")
+  purchasesAsSeller  LandPurchase[]     @relation("PurchaseSeller")
+  sentMessages       Message[]
+  notifications      Notification[]
+}
+
+model Wallet {
+  id           String              @id @default(uuid())
+  userId       String              @unique
+  balance      Decimal             @default(0) @db.Decimal(15, 2)
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+  user         User                @relation(fields: [userId], references: [id])
+  sentTxns     WalletTransaction[] @relation("FromWallet")
+  receivedTxns WalletTransaction[] @relation("ToWallet")
+}
+
+model WalletTransaction {
+  id           String       @id @default(uuid())
+  fromWalletId String?
+  toWalletId   String?
+  amount       Decimal      @db.Decimal(15, 2)
+  type         WalletTxType
+  reference    String       @unique @default(uuid())
+  note         String?
+  purchaseId   String?
+  createdAt    DateTime     @default(now())
+  fromWallet   Wallet?      @relation("FromWallet", fields: [fromWalletId], references: [id])
+  toWallet     Wallet?      @relation("ToWallet", fields: [toWalletId], references: [id])
+  purchase     LandPurchase? @relation(fields: [purchaseId], references: [id])
+
+  @@index([fromWalletId])
+  @@index([toWalletId])
+  @@index([purchaseId])
+}
+
+model LandPurchase {
+  id             String              @id @default(uuid())
+  buyerId        String
+  sellerId       String
+  verificationId String              @unique
+  agreedAmount   Decimal             @db.Decimal(15, 2)
+  status         PurchaseStatus      @default(PENDING_SELLER)
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  buyer          User                @relation("PurchaseBuyer", fields: [buyerId], references: [id])
+  seller         User                @relation("PurchaseSeller", fields: [sellerId], references: [id])
+  verification   LandVerification    @relation(fields: [verificationId], references: [id])
+  transactions   WalletTransaction[]
+  messages       Message[]
+  notifications  Notification[]
+
+  @@index([buyerId])
+  @@index([sellerId])
+}
+
+model Message {
+  id         String       @id @default(uuid())
+  purchaseId String
+  senderId   String
+  content    String
+  createdAt  DateTime     @default(now())
+  purchase   LandPurchase @relation(fields: [purchaseId], references: [id])
+  sender     User         @relation(fields: [senderId], references: [id])
+
+  @@index([purchaseId])
+}
+
+model Notification {
+  id         String       @id @default(uuid())
+  userId     String
+  purchaseId String?
+  type       NotifType
+  title      String
+  body       String
+  read       Boolean      @default(false)
+  createdAt  DateTime     @default(now())
+  user       User         @relation(fields: [userId], references: [id])
+  purchase   LandPurchase? @relation(fields: [purchaseId], references: [id])
+
+  @@index([userId])
+  @@index([purchaseId])
+}
+
+model Land {
+  id                 String             @id @default(uuid())
+  parcelNumber       String             @unique
+  ownerName          String
+  location           String
+  documentType       String?
+  registrationDate   DateTime?
+  size               String?
+  encumbrances       String?
+  transactionHistory Json               @default("[]")
+  rawData            Json
+  sourceUrl          String
+  scrapedAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  verifications      LandVerification[]
+
+  @@index([parcelNumber])
+}
+
+model LandVerification {
+  id             String             @id @default(uuid())
+  userId         String
+  parcelNumber   String
+  location       String
+  ownerName      String
+  status         VerificationStatus @default(PENDING)
+  trustScore     Int?
+  landId         String?
+  matchReport    Json?
+  registryStatus RegistryStatus     @default(PENDING)
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  user           User               @relation(fields: [userId], references: [id])
+  land           Land?              @relation(fields: [landId], references: [id])
+  documents      Document[]
+  payment        Payment?
+  scoreHistory   TrustScoreEvent[]
+  purchase       LandPurchase?
+
+  @@index([userId])
+}
+
+model Document {
+  id                String           @id @default(uuid())
+  verificationId    String
+  type              DocumentType
+  filePath          String
+  analysisResult    Json?
+  authenticityScore Int?
+  uploadedAt        DateTime         @default(now())
+  verification      LandVerification @relation(fields: [verificationId], references: [id])
+
+  @@index([verificationId])
+}
+
+model TrustScoreEvent {
+  id             String           @id @default(uuid())
+  verificationId String
+  previousScore  Int?
+  newScore       Int
+  reason         String
+  triggeredBy    TriggeredBy
+  createdAt      DateTime         @default(now())
+  verification   LandVerification @relation(fields: [verificationId], references: [id])
+
+  @@index([verificationId])
+}
+
+model Payment {
+  id                    String           @id @default(uuid())
+  verificationId        String           @unique
+  userId                String
+  amount                Decimal
+  currency              String           @default("NGN")
+  status                PaymentStatus    @default(PENDING)
+  squadReference        String?
+  squadVirtualAccountId String?
+  metadata              Json?
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @updatedAt
+  verification          LandVerification @relation(fields: [verificationId], references: [id])
+  user                  User             @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model ScamReport {
+  id           String   @id @default(uuid())
+  userId       String?
+  parcelNumber String
+  description  String
+  evidenceUrls Json     @default("[]")
+  createdAt    DateTime @default(now())
+  user         User?    @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([parcelNumber])
+}
+
+model AdminConfig {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
