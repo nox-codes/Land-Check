@@ -36,7 +36,7 @@ export const AboutPage: React.FC = () => {
 
       {/* Problem */}
       <section style={{ padding: '60px 48px', background: 'var(--lc-bg)' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 56, alignItems: 'center' }}>
+        <div className="lc-grid-halves" style={{ maxWidth: 1100, margin: '0 auto' }}>
           <div>
             <div style={{ color: 'var(--lc-primary)', fontWeight: 600, fontSize: 13, marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.08em' }}>The Problem</div>
             <h2 style={{ fontSize: 36, fontWeight: 700, letterSpacing: '-0.02em', marginBottom: 20 }}>Land Fraud Costs Nigerians Billions Annually</h2>
@@ -63,7 +63,7 @@ export const AboutPage: React.FC = () => {
       <section style={{ padding: '80px 48px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <h2 style={{ fontSize: 36, fontWeight: 700, textAlign: 'center', marginBottom: 48, letterSpacing: '-0.02em' }}>Our Values</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+          <div className="lc-grid-3" style={{ gap: 24 }}>
             {[
               { icon: '🔍', title: 'Transparency', desc: 'Every verification step is documented and available to our clients.' },
               { icon: '🛡️', title: 'Security', desc: 'Bank-grade encryption protects every document and transaction.' },
@@ -83,7 +83,7 @@ export const AboutPage: React.FC = () => {
       <section style={{ padding: '80px 48px', background: 'var(--lc-bg)' }}>
         <div style={{ maxWidth: 900, margin: '0 auto' }}>
           <h2 style={{ fontSize: 36, fontWeight: 700, textAlign: 'center', marginBottom: 48, letterSpacing: '-0.02em' }}>Meet the Team</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 28 }}>
+          <div className="lc-grid-3" style={{ gap: 28 }}>
             {TEAM.map((m) => (
               <div key={m.name} className="lc-card" style={{ padding: 28, textAlign: 'center' }}>
                 <img

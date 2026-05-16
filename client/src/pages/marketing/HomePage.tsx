@@ -30,7 +30,7 @@ export const HomePage: React.FC = () => (
     <MarketingNav />
 
     {/* Hero */}
-    <section style={{ padding: '100px 48px 80px', textAlign: 'center', maxWidth: 900, margin: '0 auto' }} className="lc-fade-up">
+    <section className="lc-hero lc-fade-up">
       <div style={{
         display: 'inline-flex', alignItems: 'center', gap: 8,
         background: 'var(--lc-primary-50)', color: 'var(--lc-primary-700)',
@@ -65,11 +65,11 @@ export const HomePage: React.FC = () => (
     </section>
 
     {/* Trust Tiers */}
-    <section style={{ padding: '80px 48px', background: 'var(--lc-bg)' }}>
+    <section className="lc-section-pad" style={{ background: 'var(--lc-bg)' }}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <h2 style={{ fontSize: 36, fontWeight: 700, textAlign: 'center', marginBottom: 12, letterSpacing: '-0.02em' }}>Understanding Trust Scores</h2>
         <p style={{ textAlign: 'center', color: 'var(--lc-text-muted)', marginBottom: 48, fontSize: 16 }}>Every property gets a score from 0 to 100 based on our AI analysis.</p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+        <div className="lc-grid-3" style={{ gap: 24 }}>
           {TRUST_TIERS.map((tier) => (
             <div key={tier.label} className="lc-card" style={{ padding: 32, textAlign: 'center' }}>
               <div style={{ width: 64, height: 64, borderRadius: 999, background: tier.color, opacity: 0.1, margin: '0 auto 16px' }} />
@@ -83,11 +83,11 @@ export const HomePage: React.FC = () => (
     </section>
 
     {/* How It Works */}
-    <section style={{ padding: '80px 48px', background: 'var(--lc-navy)' }}>
+    <section className="lc-section-pad" style={{ background: 'var(--lc-navy)' }}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <h2 style={{ fontSize: 36, fontWeight: 700, textAlign: 'center', color: '#fff', marginBottom: 12, letterSpacing: '-0.02em' }}>How It Works</h2>
         <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.5)', marginBottom: 56, fontSize: 16 }}>Get started in under 5 minutes.</p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 24 }}>
+        <div className="lc-grid-4" style={{ gap: 24 }}>
           {HOW_STEPS.map((s) => (
             <div key={s.num} style={{ textAlign: 'center' }}>
               <div style={{
@@ -105,11 +105,11 @@ export const HomePage: React.FC = () => (
     </section>
 
     {/* Why Trust */}
-    <section style={{ padding: '80px 48px' }}>
+    <section className="lc-section-pad">
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <h2 style={{ fontSize: 36, fontWeight: 700, textAlign: 'center', marginBottom: 12, letterSpacing: '-0.02em' }}>Why Trust LandCheck?</h2>
         <p style={{ textAlign: 'center', color: 'var(--lc-text-muted)', marginBottom: 56, fontSize: 16 }}>Built for Nigeria, powered by world-class AI.</p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }}>
+        <div className="lc-grid-2" style={{ gap: 24 }}>
           {WHY_FEATURES.map((f) => (
             <div key={f.title} className="lc-card" style={{ padding: '28px 32px', display: 'flex', gap: 20, alignItems: 'flex-start' }}>
               <IconTile icon={f.icon} tone={f.tone} size={48} />

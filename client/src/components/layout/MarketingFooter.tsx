@@ -4,7 +4,7 @@ import { Logo, I } from '../icons';
 
 export const MarketingFooter: React.FC = () => (
   <footer style={{ background: 'var(--lc-navy)', color: '#fff', padding: '60px 48px 32px' }}>
-    <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 1fr', gap: 40, marginBottom: 48 }}>
+    <div className="lc-grid-4" style={{ marginBottom: 48 }}>
       {/* Brand */}
       <div>
         <Logo size={22} color="var(--lc-primary)" />
@@ -54,6 +54,7 @@ export const MarketingFooter: React.FC = () => (
     <div style={{
       borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 24,
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      flexWrap: 'wrap', gap: 12,
       fontSize: 13, color: 'rgba(255,255,255,0.4)',
     }}>
       <span>© 2026 LandCheck Technologies Ltd. All rights reserved.</span>

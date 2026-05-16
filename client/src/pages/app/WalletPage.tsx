@@ -5,6 +5,7 @@ import { Button } from '../../components/ui';
 import { I } from '../../components/icons';
 import { getMyWallet, ensureWallet, initiateTopup, verifyTopup, withdraw } from '../../api/wallet';
 import type { Wallet, WalletTransaction } from '../../types';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 const TX_LABELS: Record<string, string> = {
   FUND: 'Wallet Top-up',
@@ -29,6 +30,7 @@ function isCreditTx(tx: WalletTransaction, walletId: string) {
 }
 
 export const WalletPage: React.FC = () => {
+  const isMobile = useIsMobile();
   const [searchParams, setSearchParams] = useSearchParams();
   const [wallet, setWallet] = useState<Wallet | null>(null);
   const [loading, setLoading] = useState(true);
@@ -214,7 +216,7 @@ export const WalletPage: React.FC = () => {
       ) : error ? (
         <div style={{ color: 'var(--lc-danger)', padding: 24 }}>{error}</div>
       ) : wallet ? (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 20, alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 340px', gap: 20, alignItems: 'start' }}>
 
           {/* Left column */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>

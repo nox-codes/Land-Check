@@ -4,6 +4,7 @@ import { Logo, I } from '../icons';
 import type { IconName } from '../icons';
 import { useAuth, displayName } from '../../contexts/AuthContext';
 import { getNotifications } from '../../api/notifications';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 const NAV_ITEMS: { to: string; label: string; icon: IconName }[] = [
   { to: '/app/dashboard',     label: 'Main Dashboard',      icon: 'dashboard' },
@@ -21,12 +22,12 @@ const ADMIN_NAV: { to: string; label: string; icon: IconName } = {
   to: '/app/admin', label: 'Admin Panel', icon: 'settings',
 };
 
-const SidebarItem: React.FC<{ to: string; icon: IconName; label: string; active: boolean }> = ({
-  to, icon, label, active,
+const SidebarItem: React.FC<{ to: string; icon: IconName; label: string; active: boolean; onClick?: () => void }> = ({
+  to, icon, label, active, onClick,
 }) => {
   const [hover, setHover] = useState(false);
   return (
-    <Link to={to} style={{ textDecoration: 'none' }}>
+    <Link to={to} style={{ textDecoration: 'none' }} onClick={onClick}>
       <div
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
@@ -48,7 +49,14 @@ const SidebarItem: React.FC<{ to: string; icon: IconName; label: string; active:
   );
 };
 
-const TopBar: React.FC<{ title?: string; subtitle?: string }> = ({ title, subtitle }) => {
+interface TopBarProps {
+  title?: string;
+  subtitle?: string;
+  onMenuClick?: () => void;
+  isMobile?: boolean;
+}
+
+const TopBar: React.FC<TopBarProps> = ({ title, subtitle, onMenuClick, isMobile }) => {
   const [profileOpen, setProfileOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
@@ -82,39 +90,63 @@ const TopBar: React.FC<{ title?: string; subtitle?: string }> = ({ title, subtit
 
   return (
     <div style={{
-      padding: '18px 32px',
+      padding: isMobile ? '14px 16px' : '18px 32px',
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       borderBottom: '1px solid var(--lc-border-subtle)',
       background: '#fff',
+      gap: 12,
     }}>
-      <div>
-        {title && <h1 style={{ margin: 0, fontSize: 22, fontWeight: 700, letterSpacing: '-0.015em', color: 'var(--lc-text)' }}>{title}</h1>}
-        {subtitle && <div style={{ fontSize: 13, color: 'var(--lc-text-muted)', marginTop: 2 }}>{subtitle}</div>}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
+        {isMobile && onMenuClick && (
+          <button
+            onClick={onMenuClick}
+            style={{ color: 'var(--lc-text)', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36 }}
+          >
+            <I name="menu" size={22} />
+          </button>
+        )}
+        <div style={{ minWidth: 0 }}>
+          {title && (
+            <h1 style={{
+              margin: 0, fontSize: isMobile ? 17 : 22, fontWeight: 700,
+              letterSpacing: '-0.015em', color: 'var(--lc-text)',
+              whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+            }}>
+              {title}
+            </h1>
+          )}
+          {subtitle && !isMobile && (
+            <div style={{ fontSize: 13, color: 'var(--lc-text-muted)', marginTop: 2 }}>{subtitle}</div>
+          )}
+        </div>
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 8 : 18, flexShrink: 0 }}>
         <Link to="/app/notifications" onClick={() => setUnreadCount(0)} style={{
-          width: 40, height: 40, borderRadius: 999,
+          width: 36, height: 36, borderRadius: 999,
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
           color: 'var(--lc-primary)', position: 'relative',
         }}>
-          <I name="bell" size={22} strokeWidth={1.75} />
+          <I name="bell" size={20} strokeWidth={1.75} />
           {unreadCount > 0 && (
             <span style={{
               position: 'absolute', top: 4, right: 4,
-              width: 16, height: 16, borderRadius: 999,
+              width: 14, height: 14, borderRadius: 999,
               background: 'var(--lc-danger)', border: '2px solid #fff',
-              color: '#fff', fontSize: 9, fontWeight: 700,
+              color: '#fff', fontSize: 8, fontWeight: 700,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
               {unreadCount > 9 ? '9+' : unreadCount}
             </span>
           )}
         </Link>
+
         <div ref={ref} style={{ position: 'relative' }}>
           <button
             onClick={() => setProfileOpen(!profileOpen)}
             style={{
-              display: 'inline-flex', alignItems: 'center', gap: 10, padding: '4px 10px 4px 4px',
+              display: 'inline-flex', alignItems: 'center', gap: isMobile ? 0 : 10,
+              padding: isMobile ? '4px' : '4px 10px 4px 4px',
               borderRadius: 999, border: '1px solid var(--lc-border-subtle)',
               background: '#fff', cursor: 'pointer',
             }}
@@ -127,8 +159,12 @@ const TopBar: React.FC<{ title?: string; subtitle?: string }> = ({ title, subtit
             }}>
               {name.charAt(0).toUpperCase() || '?'}
             </div>
-            <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--lc-text)' }}>{name}</span>
-            <I name="chevronDown" size={16} style={{ color: 'var(--lc-text-muted)', transform: profileOpen ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform var(--lc-dur) var(--lc-ease)' }} />
+            {!isMobile && (
+              <>
+                <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--lc-text)' }}>{name}</span>
+                <I name="chevronDown" size={16} style={{ color: 'var(--lc-text-muted)', transform: profileOpen ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform var(--lc-dur) var(--lc-ease)' }} />
+              </>
+            )}
           </button>
           {profileOpen && (
             <div className="lc-scale-in lc-card" style={{
@@ -191,18 +227,67 @@ export const AppShell: React.FC<AppShellProps> = ({ children, title, subtitle })
   const location = useLocation();
   const { user, logout } = useAuth();
   const isAdmin = user?.role === 'ADMIN';
+  const isMobile = useIsMobile();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Close sidebar on route change
+  useEffect(() => { setSidebarOpen(false); }, [location.pathname]);
+
+  // Prevent body scroll when mobile sidebar is open
+  useEffect(() => {
+    document.body.style.overflow = (isMobile && sidebarOpen) ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [isMobile, sidebarOpen]);
+
+  const closeSidebar = () => setSidebarOpen(false);
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '264px 1fr', minHeight: '100vh', background: 'var(--lc-bg)' }}>
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: isMobile ? '1fr' : '264px 1fr',
+      minHeight: '100vh',
+      background: 'var(--lc-bg)',
+    }}>
+      {/* Mobile overlay backdrop */}
+      {isMobile && sidebarOpen && (
+        <div
+          onClick={closeSidebar}
+          style={{
+            position: 'fixed', inset: 0,
+            background: 'rgba(0,0,0,0.5)',
+            backdropFilter: 'blur(2px)',
+            zIndex: 40,
+          }}
+        />
+      )}
+
+      {/* Sidebar */}
       <aside style={{
         background: 'var(--lc-navy)', color: '#fff',
         padding: '28px 18px',
         display: 'flex', flexDirection: 'column',
-        position: 'sticky', top: 0, height: '100vh',
+        position: isMobile ? 'fixed' : 'sticky',
+        top: 0, height: '100vh',
+        width: 264,
+        transform: isMobile
+          ? (sidebarOpen ? 'translateX(0)' : 'translateX(-100%)')
+          : 'none',
+        transition: 'transform 280ms cubic-bezier(0.4,0,0.2,1)',
+        zIndex: 50,
+        overflowY: 'auto',
       }}>
-        <div style={{ padding: '0 12px 28px' }}>
+        <div style={{ padding: '0 12px 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Logo size={24} color="var(--lc-primary)" />
+          {isMobile && (
+            <button
+              onClick={closeSidebar}
+              style={{ color: 'rgba(255,255,255,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32 }}
+            >
+              <I name="x" size={18} />
+            </button>
+          )}
         </div>
+
         <nav style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
           {NAV_ITEMS.map((item) => (
             <SidebarItem
@@ -211,6 +296,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children, title, subtitle })
               icon={item.icon}
               label={item.label}
               active={location.pathname === item.to}
+              onClick={isMobile ? closeSidebar : undefined}
             />
           ))}
           {isAdmin && (
@@ -221,10 +307,12 @@ export const AppShell: React.FC<AppShellProps> = ({ children, title, subtitle })
                 icon={ADMIN_NAV.icon}
                 label={ADMIN_NAV.label}
                 active={location.pathname === ADMIN_NAV.to}
+                onClick={isMobile ? closeSidebar : undefined}
               />
             </>
           )}
         </nav>
+
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 16, marginTop: 16 }}>
           <button
             onClick={logout}
@@ -243,9 +331,16 @@ export const AppShell: React.FC<AppShellProps> = ({ children, title, subtitle })
           </button>
         </div>
       </aside>
+
+      {/* Main content */}
       <main style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-        <TopBar title={title} subtitle={subtitle} />
-        <div style={{ padding: '24px 32px 40px', flex: 1 }}>
+        <TopBar
+          title={title}
+          subtitle={subtitle}
+          onMenuClick={isMobile ? () => setSidebarOpen(true) : undefined}
+          isMobile={isMobile}
+        />
+        <div style={{ padding: isMobile ? '16px 16px 32px' : '24px 32px 40px', flex: 1 }}>
           {children}
         </div>
       </main>

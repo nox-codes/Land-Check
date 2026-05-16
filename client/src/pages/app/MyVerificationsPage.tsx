@@ -91,9 +91,9 @@ export const MyVerificationsPage: React.FC = () => {
             <Spinner size={28} color="var(--lc-primary)" />
           </div>
         ) : (
-          <>
+          <div className="lc-table-scroll">
             {/* Table header */}
-            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1.4fr 1fr 1fr 1fr 64px', gap: 16, padding: '8px 12px', fontSize: 11, fontWeight: 600, color: 'var(--lc-text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '1px solid var(--lc-border-subtle)' }}>
+            <div style={{ minWidth: 600, display: 'grid', gridTemplateColumns: '2fr 1.4fr 1fr 1fr 1fr 64px', gap: 16, padding: '8px 12px', fontSize: 11, fontWeight: 600, color: 'var(--lc-text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '1px solid var(--lc-border-subtle)' }}>
               <span>Property / Parcel</span><span>Owner</span><span>Trust Score</span><span>Status</span><span style={{ textAlign: 'right' }}>Date</span><span />
             </div>
 
@@ -109,7 +109,7 @@ export const MyVerificationsPage: React.FC = () => {
               </div>
             ) : filtered.map((v) => (
               <div key={v.id}
-                style={{ display: 'grid', gridTemplateColumns: '2fr 1.4fr 1fr 1fr 1fr 64px', gap: 16, padding: '14px 12px', alignItems: 'center', borderBottom: '1px solid var(--lc-border-subtle)', cursor: 'pointer', transition: 'background var(--lc-dur)' }}
+                style={{ minWidth: 600, display: 'grid', gridTemplateColumns: '2fr 1.4fr 1fr 1fr 1fr 64px', gap: 16, padding: '14px 12px', alignItems: 'center', borderBottom: '1px solid var(--lc-border-subtle)', cursor: 'pointer', transition: 'background var(--lc-dur)' }}
                 onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = 'var(--lc-surface-2)'; }}
                 onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
                 onClick={() => navigate(`/app/report/${v.id}`)}
@@ -137,7 +137,7 @@ export const MyVerificationsPage: React.FC = () => {
                 </button>
               </div>
             ))}
-          </>
+          </div>
         )}
       </div>
     </AppShell>

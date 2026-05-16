@@ -6,6 +6,7 @@ import { Spinner } from '../../components/ui/Spinner';
 import { getMyPurchases } from '../../api/purchases';
 import { useAuth } from '../../contexts/AuthContext';
 import type { LandPurchase, PurchaseStatus, Verification } from '../../types';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 const fmt = (n: number) =>
   new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', minimumFractionDigits: 2 }).format(n);
@@ -45,6 +46,7 @@ const STATUS_LABEL: Record<PurchaseStatus, string> = {
 export const EscrowStatusPage: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const isMobile = useIsMobile();
   const [loading, setLoading] = useState(true);
   const [purchases, setPurchases] = useState<LandPurchase[]>([]);
 
@@ -69,7 +71,7 @@ export const EscrowStatusPage: React.FC = () => {
   return (
     <AppShell title="Escrow Status" subtitle="Track your land purchase payment pipeline">
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 18 }}>
+        <div className="lc-grid-3">
           <StatCard icon="wallet"      iconTone="accent"   label="Total in Escrow"     value={fmt(totalHeld)} />
           <StatCard icon="checkCircle" iconTone="success"  label="Total Released"       value={fmt(totalReleased)} />
           <StatCard icon="document"    iconTone="info"     label="Active Purchases"     value={String(escrowPurchases.length)} />
@@ -89,12 +91,14 @@ export const EscrowStatusPage: React.FC = () => {
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               {/* Table header */}
-              <div style={{ display: 'grid', gridTemplateColumns: '2fr 1.4fr 1.2fr 1fr', gap: 16, padding: '6px 24px', fontSize: 11, fontWeight: 600, color: 'var(--lc-text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                <span>Property</span>
-                <span>Amount</span>
-                <span>Status</span>
-                <span style={{ textAlign: 'right' }}>Date</span>
-              </div>
+              {!isMobile && (
+                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1.4fr 1.2fr 1fr', gap: 16, padding: '6px 24px', fontSize: 11, fontWeight: 600, color: 'var(--lc-text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                  <span>Property</span>
+                  <span>Amount</span>
+                  <span>Status</span>
+                  <span style={{ textAlign: 'right' }}>Date</span>
+                </div>
+              )}
 
               {escrowPurchases.map((p) => {
                 const stage = purchaseStage(p.status);
@@ -109,7 +113,7 @@ export const EscrowStatusPage: React.FC = () => {
                     onClick={() => navigate(`/app/purchases/${p.id}`)}
                   >
                     {/* Row summary */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '2fr 1.4fr 1.2fr 1fr', gap: 16, alignItems: 'center', marginBottom: 20 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '2fr 1.4fr 1.2fr 1fr', gap: isMobile ? 8 : 16, alignItems: 'center', marginBottom: 20 }}>
                       <div>
                         <div style={{ fontSize: 15, fontWeight: 600 }}>{verification?.location ?? '—'}</div>
                         <div style={{ fontSize: 12, color: 'var(--lc-text-muted)', marginTop: 2 }}>

@@ -13,6 +13,7 @@ import {
 import { uploadDocument } from '../../api/documents';
 import { useAuth } from '../../contexts/AuthContext';
 import type { LandPurchase, DocumentType, Verification } from '../../types';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 // ─── Trust score helpers ──────────────────────────────────────────────────────
 
@@ -206,6 +207,7 @@ export const PurchaseSessionPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const isMobile = useIsMobile();
 
   const [purchase, setPurchase] = useState<LandPurchase | null>(null);
   const [loading, setLoading] = useState(true);
@@ -408,7 +410,7 @@ export const PurchaseSessionPage: React.FC = () => {
 
           {/* ── MAIN SESSION ───────────────────────────────────────────────── */}
           {purchase.status !== 'PENDING_SELLER' && purchase.status !== 'DECLINED' && (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 20 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 320px', gap: 20 }}>
               {/* Left column */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
 

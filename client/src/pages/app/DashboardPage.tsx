@@ -7,6 +7,7 @@ import { I } from '../../components/icons';
 import { useAuth, displayName } from '../../contexts/AuthContext';
 import { listVerifications } from '../../api/verifications';
 import type { Verification, VerificationStatus } from '../../types';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 function statusTone(s: VerificationStatus) {
   if (s === 'VERIFIED') return 'success' as const;
@@ -47,6 +48,7 @@ const EmptyState: React.FC<{ message: string }> = ({ message }) => (
 export const DashboardPage: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [verifications, setVerifications] = useState<Verification[]>([]);
   const [loading, setLoading] = useState(true);
   const [range, setRange] = useState('Last 7 Days');
@@ -76,7 +78,7 @@ export const DashboardPage: React.FC = () => {
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         {/* Stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 18 }}>
+        <div className="lc-grid-4">
           <StatCard icon="document"      iconTone="success" label="Total Verifications" value={String(verifications.length)} />
           <StatCard icon="shieldCheck"   iconTone="success" label="Verified Lands"      value={String(verified)} />
           <StatCard icon="alertTriangle" iconTone="caution" label="Caution"             value={String(caution)} />
@@ -84,7 +86,7 @@ export const DashboardPage: React.FC = () => {
         </div>
 
         {/* Trust score + activity */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.8fr', gap: 18 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1.8fr', gap: 18 }}>
           <Section title="Trust Score">
             {loading ? (
               <div style={{ display: 'flex', justifyContent: 'center', padding: 40 }}><Spinner size={28} color="var(--lc-primary)" /></div>
@@ -129,7 +131,7 @@ export const DashboardPage: React.FC = () => {
         </div>
 
         {/* Account + Recent */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.8fr', gap: 18 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1.8fr', gap: 18 }}>
           <Section title="Account Information">
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
@@ -172,14 +174,14 @@ export const DashboardPage: React.FC = () => {
             ) : recentVerifications.length === 0 ? (
               <EmptyState message="No verifications yet. Start one to see it here." />
             ) : (
-              <div>
-                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1.2fr 1fr 1fr 1fr', gap: 16, padding: '8px 12px', fontSize: 11, fontWeight: 600, color: 'var(--lc-text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              <div className="lc-table-scroll">
+                <div style={{ minWidth: 480, display: 'grid', gridTemplateColumns: '2fr 1.2fr 1fr 1fr 1fr', gap: 16, padding: '8px 12px', fontSize: 11, fontWeight: 600, color: 'var(--lc-text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                   <span>Property</span><span>Owner</span><span>Trust Score</span><span>Status</span><span style={{ textAlign: 'right' }}>Date</span>
                 </div>
                 {recentVerifications.map((v) => (
                   <div key={v.id}
                     onClick={() => navigate(`/app/report/${v.id}`)}
-                    style={{ display: 'grid', gridTemplateColumns: '2fr 1.2fr 1fr 1fr 1fr', gap: 16, padding: '14px 12px', alignItems: 'center', borderRadius: 10, cursor: 'pointer', transition: 'background var(--lc-dur)' }}
+                    style={{ minWidth: 480, display: 'grid', gridTemplateColumns: '2fr 1.2fr 1fr 1fr 1fr', gap: 16, padding: '14px 12px', alignItems: 'center', borderRadius: 10, cursor: 'pointer', transition: 'background var(--lc-dur)' }}
                     onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = 'var(--lc-surface-2)'; }}
                     onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
                   >

@@ -147,3 +147,83 @@ input, textarea, select {
 .lc-fade-in   { animation: lc-fade-in   0.3s var(--lc-ease) both; }
 .lc-scale-in  { animation: lc-scale-in  0.2s var(--lc-spring) both; }
 .lc-float     { animation: lc-float     3s ease-in-out infinite; }
+
+/* ── Responsive grid utilities ───────────────────────────── */
+.lc-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+.lc-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+.lc-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+.lc-grid-halves {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+/* Horizontally scrollable container for wide tables */
+.lc-table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── Breakpoints ─────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .lc-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .lc-grid-halves {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .lc-grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 540px) {
+  .lc-grid-4,
+  .lc-grid-3,
+  .lc-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Marketing page responsive helpers ───────────────────── */
+.lc-hero {
+  padding: 100px 48px 80px;
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.lc-section-pad {
+  padding: 80px 48px;
+}
+
+@media (max-width: 768px) {
+  .lc-hero {
+    padding: 56px 20px 48px;
+  }
+
+  .lc-hero h1 {
+    font-size: 40px !important;
+  }
+
+  .lc-section-pad {
+    padding: 52px 20px;
+  }
+}

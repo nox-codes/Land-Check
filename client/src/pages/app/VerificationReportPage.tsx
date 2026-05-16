@@ -5,6 +5,7 @@ import { TrustGauge, Pill, Section, Button, Spinner } from '../../components/ui'
 import { I, IconTile } from '../../components/icons';
 import { listVerifications, getVerification } from '../../api/verifications';
 import type { Verification, VerificationStatus } from '../../types';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 function statusTone(s: VerificationStatus) {
   if (s === 'VERIFIED') return 'success' as const;
@@ -23,6 +24,7 @@ const EmptyState: React.FC = () => (
 export const VerificationReportPage: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+  const isMobile = useIsMobile();
   const [verification, setVerification] = useState<Verification | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -73,7 +75,7 @@ export const VerificationReportPage: React.FC = () => {
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         {/* Summary metrics */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 18 }}>
+        <div className="lc-grid-4">
           <div className="lc-card" style={{ padding: '20px 24px', display: 'flex', gap: 16, alignItems: 'center' }}>
             <IconTile icon="document" tone="success" size={44} />
             <div>
@@ -104,7 +106,7 @@ export const VerificationReportPage: React.FC = () => {
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: 18 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1.6fr', gap: 18 }}>
           {/* Trust gauge */}
           <Section title="Overall Trust Score">
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
@@ -192,7 +194,7 @@ export const VerificationReportPage: React.FC = () => {
         {/* Documents list */}
         {docCount > 0 && (
           <Section title="Uploaded Documents">
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+            <div className="lc-grid-2">
               {v.documents.map((doc) => (
                 <div key={doc.id} style={{
                   display: 'flex', gap: 14, padding: '14px 16px',

@@ -27,7 +27,7 @@ const Step1: React.FC<{ form: FormState; set: (k: keyof FormState) => (v: string
   <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
     <h3 style={{ fontSize: 17, fontWeight: 600, margin: 0 }}>Property Details</h3>
     <p style={{ fontSize: 13, color: 'var(--lc-text-muted)', marginTop: -12 }}>Enter the land parcel details exactly as they appear on the document.</p>
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+    <div className="lc-grid-2">
       <div style={{ gridColumn: '1 / -1' }}>
         <Input label="Parcel Number (e.g. LG-IKJ-2021-00127)" value={form.parcelNumber} onChange={set('parcelNumber')} />
       </div>
@@ -51,7 +51,7 @@ const Step3: React.FC<{ form: FormState }> = ({ form }) => (
     <h3 style={{ fontSize: 17, fontWeight: 600, margin: 0 }}>Review & Submit</h3>
     <div className="lc-card" style={{ padding: '20px 24px' }}>
       <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 14, color: 'var(--lc-primary)' }}>Property Details</div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+      <div className="lc-grid-2">
         {[
           { label: 'Parcel Number', value: form.parcelNumber },
           { label: 'Location', value: form.location },

@@ -29,7 +29,7 @@ export const ContactPage: React.FC = () => {
           <p style={{ color: 'var(--lc-text-muted)', fontSize: 16, lineHeight: 1.7 }}>We're here to help. Reach out and we'll respond within 24 hours.</p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: 48, alignItems: 'start' }}>
+        <div className="lc-grid-halves" style={{ gap: 48, alignItems: 'start' }}>
           {/* Info */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
             {[
@@ -57,7 +57,7 @@ export const ContactPage: React.FC = () => {
           {/* Form */}
           <div className="lc-card" style={{ padding: 36 }}>
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+              <div className="lc-grid-2">
                 <Input label="Full Name" value={form.name} onChange={set('name')} />
                 <Input label="Email Address" value={form.email} onChange={set('email')} type="email" />
               </div>

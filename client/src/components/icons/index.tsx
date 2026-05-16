@@ -8,7 +8,7 @@ export type IconName =
   | 'alertTriangle' | 'alertOctagon' | 'info' | 'mail' | 'phone' | 'mapPin'
   | 'eye' | 'eyeOff' | 'settings' | 'download' | 'filter' | 'plus' | 'minus' | 'trash'
   | 'external' | 'copy' | 'trendUp' | 'twitter' | 'facebook' | 'instagram'
-  | 'apple' | 'google' | 'home' | 'x' | 'spinner';
+  | 'apple' | 'google' | 'home' | 'x' | 'spinner' | 'menu';
 
 export type Tone = 'success' | 'caution' | 'danger' | 'accent' | 'info' | 'neutral';
 
@@ -63,6 +63,7 @@ const ICONS: Record<IconName, React.ReactNode> = {
   home: <><path d="M3 9.5 12 3l9 6.5V21a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5Z" /><path d="M9 22V12h6v10" /></>,
   x: <><path d="M18 6 6 18M6 6l12 12" /></>,
   spinner: <><circle cx="12" cy="12" r="9" strokeDasharray="28 56" strokeLinecap="round" /></>,
+  menu: <><path d="M3 12h18M3 6h18M3 18h18" /></>,
 };
 
 interface IconProps {

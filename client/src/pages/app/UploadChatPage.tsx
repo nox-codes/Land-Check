@@ -6,6 +6,7 @@ import { I } from '../../components/icons';
 import { listVerifications } from '../../api/verifications';
 import { uploadDocument } from '../../api/documents';
 import type { Verification, DocumentType } from '../../types';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 interface Message {
   id: number;
@@ -55,6 +56,7 @@ const TypingIndicator: React.FC = () => (
 );
 
 export const UploadChatPage: React.FC = () => {
+  const isMobile = useIsMobile();
   const [verifications, setVerifications] = useState<Verification[]>([]);
   const [selectedVerifId, setSelectedVerifId] = useState('');
   const [docType, setDocType] = useState<DocumentType>('C_OF_O');
@@ -144,7 +146,7 @@ export const UploadChatPage: React.FC = () => {
 
   return (
     <AppShell title="Upload & Chat" subtitle="Upload documents and receive AI analysis">
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 20, height: 'calc(100vh - 160px)', minHeight: 500 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 300px', gap: 20, height: isMobile ? 'auto' : 'calc(100vh - 160px)', minHeight: 500 }}>
         {/* Chat */}
         <div className="lc-card" style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
           {/* Chat messages */}
